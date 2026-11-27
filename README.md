@@ -1,180 +1,157 @@
-# Gradient Descent Workshop: Foundations of Neural Networks
+# Gradient Descent Workshop — Group 1
 
-## Overview
+**Course:** CSCN8010 – Foundations of Machine Learning Frameworks (Conestoga College)
+**Instructor:** Prof. David Espinosa
+**Repository:** https://github.com/kinghighshow/GradientDescent_Workshop
 
-This workshop introduces students to **Gradient Descent**, a core
-optimization algorithm used in training neural networks. Students will
-explore how models learn by iteratively updating parameters to minimize
-a loss function.
+This workshop studies gradient descent, the optimization method used to train neural networks: the mathematics behind it, and the same training logic implemented in **PyTorch**, **TensorFlow** (`tf.GradientTape`) and **Keras** (`model.fit()` and a custom training loop), followed by a reflection comparing the three frameworks.
 
-The workshop combines: - Mathematical intuition - Hands-on coding with
-PyTorch - Implementation challenges using TensorFlow and Keras -
-Reflective analysis across frameworks
+## Team
 
-------------------------------------------------------------------------
+| Member | Student ID | Part |
+|---|---|---|
+| Sultan Akinola Atanda | 9114837 | Mathematical understanding, merged notebook, reflections Q1–Q5, Q14–Q15 |
+| Antonio Sainz | 9072844 | PyTorch implementation (Challenge A), README, reflections Q6, Q9, Q10 |
+| John Buni | 9115726 | TensorFlow implementation (Challenge B + extension), submission PDF, reflections Q7, Q8, Q11 |
+| Echezona (Eche) Oji | 9078881 | Keras implementation (Challenges C1, C2), requirements and reproducibility, reflections Q12, Q13 |
 
-## Learning Objectives
+---
 
-By the end of this workshop, students will be able to:
+## 1. Getting started
 
-1.  **Understand Gradient Descent**
-    -   Explain gradient descent as an optimization algorithm
-    -   Interpret gradients as directions of steepest ascent/descent
-    -   Describe how learning rate affects convergence
-2.  **Connect Math to Neural Networks**
-    -   Relate loss functions to model performance
-    -   Compute gradients conceptually for simple models
-    -   Understand parameter updates in single- and multi-layer networks
-3.  **Apply Gradient Descent in Practice**
-    -   Use PyTorch to implement training loops
-    -   Understand automatic differentiation (`autograd`)
-    -   Visualize loss reduction over iterations
-4.  **Implement Across Frameworks**
-    -   Apply gradient descent using TensorFlow (`GradientTape`)
-    -   Use Keras high-level APIs and custom training loops
-    -   Compare abstraction levels across frameworks
-5.  **Critically Reflect on ML Frameworks**
-    -   Identify similarities and differences between PyTorch,
-        TensorFlow, and Keras
-    -   Discuss trade-offs in usability, flexibility, and control
+### Prerequisites
 
-------------------------------------------------------------------------
+- Python 3.12 (64-bit)
+- Git
+- VS Code with the Python and Jupyter extensions, or JupyterLab
 
-## Workshop Structure
+### Clone the repository
 
-### 1. Mathematical Foundations
+```bash
+git clone https://github.com/kinghighshow/GradientDescent_Workshop.git
+cd GradientDescent_Workshop
+```
 
--   Loss functions and optimization objectives
+### Create the environment and install the dependencies
 
--   Gradient as slope and direction
+Windows (PowerShell):
 
--   Update rule:
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
 
-    \[ `\theta `{=tex}:= `\theta `{=tex}-
-    `\eta `{=tex}`\nabla`{=tex}\_`\theta `{=tex}L(`\theta`{=tex}) \]
+macOS / Linux:
 
--   Extension to multi-layer networks via backpropagation
+```bash
+python3.12 -m venv .venv
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install -r requirements.txt
+```
 
-------------------------------------------------------------------------
+`requirements.txt` installs PyTorch, TensorFlow, Plotly, NumPy, Matplotlib and the Jupyter kernel. On Windows and macOS, pip installs the CPU build of PyTorch, which is enough for this workshop.
 
-### 2. PyTorch Implementation (Guided)
+### Check the installation
 
-Students will: - Build a simple neural network - Define a loss
-function - Use PyTorch's `autograd` to compute gradients - Implement a
-training loop - Observe loss decreasing over iterations
+```bash
+python -c "import torch, tensorflow as tf, plotly; print(torch.__version__, tf.__version__, plotly.__version__)"
+```
 
-------------------------------------------------------------------------
+Run it with the environment's Python (`.\.venv\Scripts\python.exe` on Windows). It should print the three versions without errors.
 
-### 3. TensorFlow & Keras Challenges (Hands-On)
+### Run the notebooks
 
-Students will: - Re-implement gradient descent using TensorFlow's
-`GradientTape` - Train a model using Keras `fit()` - Implement a custom
-training loop in Keras - Compare implementation complexity and
-flexibility
+1. Open the folder in VS Code.
+2. Open a notebook and select the kernel **`.venv`** (top-right corner, *Select Kernel → Python Environments → .venv*).
+3. Click **Run All**.
 
-------------------------------------------------------------------------
+To run a notebook from the terminal instead (requires `pip install nbconvert`):
 
-### 4. Reflection & Discussion
+```bash
+jupyter nbconvert --to notebook --execute --inplace individual_notebooks/GD_Antonio.ipynb
+```
 
-Students will analyze: - How gradient descent behaves in practice - The
-role of automatic differentiation - Differences between frameworks -
-Trade-offs in abstraction vs control
+Every notebook should finish without errors and show its Plotly charts. Results are reproducible because each experiment fixes its random seed.
 
-------------------------------------------------------------------------
+### Repository structure
 
-## Expected Student Work
+```
+GradientDescent_Workshop/
+├── GradientDescent_Workshop.ipynb   # Professor's original workshop notebook (unchanged)
+├── individual_notebooks/
+│   ├── GD_Antonio.ipynb             # Challenge A – PyTorch
+│   ├── GD_John.ipynb                # Challenge B – TensorFlow
+│   ├── GD_Eche.ipynb                # Challenges C1 and C2 – Keras
+│   └── GD_sultan_.ipynb             # Mathematical understanding
+├── images/                          # Static copies of charts shown in this README
+├── requirements.txt
+└── README.md
+```
 
-Students are expected to:
+---
 
--   Follow and understand provided PyTorch examples
--   Complete partially implemented TensorFlow and Keras code
--   Debug and experiment with hyperparameters (learning rate, epochs)
--   Write short reflections addressing conceptual and practical insights
+## 2. Workshop content and results
 
-------------------------------------------------------------------------
+### Mathematical foundations (Sultan)
 
-## Deliverables
+*[Placeholder — summary of the explanations of loss, gradient, learning rate, parameter update and backpropagation, to be added after the merge.]*
 
-Students should submit: - Completed notebook with working code - Answers
-to challenge tasks - Written reflection section
+### Challenge A — PyTorch (Antonio)
 
-------------------------------------------------------------------------
+Notebook: [`individual_notebooks/GD_Antonio.ipynb`](individual_notebooks/GD_Antonio.ipynb)
 
-## Suggested Extensions (Optional)
+Model $\hat{y} = xw$ trained on $x = [1,2,3,4]$, $y = [2,4,6,8]$ (true weight $w = 2$) with mean squared error, starting from the same random weight (1.5410, seed 0) in every experiment.
 
--   Experiment with different optimizers (SGD vs Adam)
--   Visualize loss landscapes
--   Apply gradient descent to deeper networks
+| Experiment | Setting | Learned weight | Final MSE loss |
+|---|---|---|---|
+| Manual gradient descent with autograd | lr = 0.01, 200 epochs | 2.000000 | 9.0 × 10⁻¹³ |
+| Same loop without `w.grad.zero_()` | lr = 0.01, 200 epochs | 2.432230 (still oscillating) | 0.826 |
+| `nn.MSELoss` + `torch.optim.SGD` | lr = 0.01, 200 epochs | 2.000000 (identical to the manual loop) | 9.0 × 10⁻¹³ |
+| Learning rate 0.001 | 200 epochs | 1.977661 | 3.9 × 10⁻³ |
+| Learning rate 0.05 | 200 epochs | 2.000000 (loss below 10⁻⁶ by epoch 7) | 0 |
 
-------------------------------------------------------------------------
+Key findings:
+
+- The five steps of the loop (forward pass, loss, `backward()`, update inside `torch.no_grad()`, `zero_()`) recover the true weight.
+- Removing `w.grad.zero_()` makes gradients accumulate. The weight overshoots 2 and keeps oscillating around it with a period of about 16 epochs, so the loss never converges.
+- `torch.optim.SGD` and `nn.MSELoss` reproduce the manual loop exactly: same weight and same loss at every epoch.
+- For this data each update multiplies the error by $(1 - 15\eta)$, which explains the three learning-rate curves and predicts divergence for $\eta > 2/15 \approx 0.133$.
+
+![Challenge A training loss](images/pytorch_challenge_a_loss.png)
+
+![Loss with and without resetting gradients](images/pytorch_no_zero_grad_comparison.png)
+
+![Loss for three learning rates](images/pytorch_learning_rates.png)
+
+### Challenge B — TensorFlow (John)
+
+*[Placeholder — `tf.GradientTape` results, noise and mini-batch extension, large learning-rate test.]*
+
+### Challenge C — Keras (Eche)
+
+*[Placeholder — `model.fit()` (C1) and custom training loop (C2) results.]*
+
+### Reflection
+
+The 15 reflection questions are answered in the individual notebooks:
+
+| Questions | Notebook |
+|---|---|
+| Q1–Q5, Q14, Q15 | `GD_sultan_.ipynb` |
+| Q6, Q9, Q10 | `GD_Antonio.ipynb` |
+| Q7, Q8, Q11 | `GD_John.ipynb` |
+| Q12, Q13 | `GD_Eche.ipynb` |
+
+*[Placeholder — link to the merged reflection section after the merge.]*
+
+---
 
 ## References
 
--   PyTorch Documentation: https://docs.pytorch.org
--   TensorFlow Documentation: https://www.tensorflow.org
--   CS231n (Stanford): http://cs231n.stanford.edu
--   Deep Learning Book (Goodfellow et al.)
-
-------------------------------------------------------------------------
-
-### ✅ 5. How to Correctly Install PyTorch
-
-The correct installation depends on your OS, Python version, and whether you want GPU support.
-
-Below are the **official, recommended** commands.
-
-***
-
-#### ✅ **1. CPU‑Only Installation (simplest)**
-
-If you do **not** need GPU support:
-
-```bash
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
-```
-
-***
-
-#### ✅ **2. GPU Installation (NVIDIA CUDA)**
-
-### First, check your CUDA version:
-
-```bash
-nvidia-smi
-```
-
-Then install the matching version, e.g.:
-
-#### ✅ For CUDA 12.1:
-
-```bash
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-```
-
-#### ✅ For CUDA 11.8:
-
-```bash
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-```
-
-***
-
-#### ✅ **3. Generic Install (lets pip choose CPU/GPU)**
-
-```bash
-pip install torch torchvision torchaudio
-```
-
-⚠️ This may be slower and sometimes fails on Windows, so prefer the index‑url commands above.
-
-***
-
-#### ✅ Verify Installation
-
-Run:
-
-```bash
-python -c "import torch; print(torch.__version__, torch.cuda.is_available())"
-```
-
-
+- PyTorch tutorial, *A Gentle Introduction to torch.autograd*: https://docs.pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html
+- PyTorch documentation, `torch.optim`: https://docs.pytorch.org/docs/stable/optim.html
+- TensorFlow guide, *Introduction to gradients and automatic differentiation*: https://www.tensorflow.org/guide/autodiff
+- Keras guide, *Writing a training loop from scratch*: https://keras.io/guides/writing_a_training_loop_from_scratch/
+- Stanford CS231n: http://cs231n.stanford.edu
+- Goodfellow, Bengio and Courville, *Deep Learning*, MIT Press, 2016.
