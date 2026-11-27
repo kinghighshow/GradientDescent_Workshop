@@ -63,27 +63,22 @@ Run it with the environment's Python (`.\.venv\Scripts\python.exe` on Windows). 
 ### Run the notebooks
 
 1. Open the folder in VS Code.
-2. Open a notebook and select the kernel **`.venv`** (top-right corner, *Select Kernel → Python Environments → .venv*).
+2. Open `GradientDescent_Workshop.ipynb` and select the kernel **`.venv`** (top-right corner, *Select Kernel → Python Environments → .venv*).
 3. Click **Run All**.
 
 To run a notebook from the terminal instead (requires `pip install nbconvert`):
 
 ```bash
-jupyter nbconvert --to notebook --execute --inplace individual_notebooks/GD_Antonio.ipynb
+jupyter nbconvert --to notebook --execute --inplace GradientDescent_Workshop.ipynb
 ```
 
-Every notebook should finish without errors and show its Plotly charts. Results are reproducible because each experiment fixes its random seed.
+The notebook should finish without errors and show its Plotly charts. A full run takes under a minute on a laptop CPU. Results are reproducible because each experiment fixes its random seed.
 
 ### Repository structure
 
 ```
 GradientDescent_Workshop/
-├── GradientDescent_Workshop.ipynb   # Professor's original workshop notebook (unchanged)
-├── individual_notebooks/
-│   ├── GD_Antonio.ipynb             # Challenge A – PyTorch
-│   ├── GD_John.ipynb                # Challenge B – TensorFlow
-│   ├── GD_Eche.ipynb                # Challenges C1 and C2 – Keras
-│   └── GD_sultan_.ipynb             # Mathematical understanding
+├── GradientDescent_Workshop.ipynb   # Workshop notebook with all team sections merged in
 ├── images/                          # Static copies of charts shown in this README
 ├── requirements.txt
 └── README.md
@@ -95,11 +90,18 @@ GradientDescent_Workshop/
 
 ### Mathematical foundations (Sultan)
 
-*[Placeholder — summary of the explanations of loss, gradient, learning rate, parameter update and backpropagation, to be added after the merge.]*
+Section: *Group 1: Mathematical Understanding*, after Section 7 of the notebook.
+
+- Plain-language explanations of the loss, the gradient, the parameter update, the learning rate, and how backpropagation (computing the gradient) relates to gradient descent (using it).
+- One update of the single neuron worked by hand. It matches the first epoch of the NumPy cell exactly (loss 21, $w = 1.7$, $b = 0.8$).
+- The chain rule for a first-layer weight of a two-layer network, checked against PyTorch autograd (both give −0.022900).
+- Why the Section 7 learning rates behave as they do: the error is multiplied by $(1 - 2\eta)$ each step, so $\eta = 0.9$ zigzags around the minimum while its loss curve still looks smooth.
+- The curvature (Hessian eigenvalues 16.7 and 0.3) of the weight-and-bias problem used in Challenges B and C. It explains the team's results: learning rates above about 0.12 diverge, and the bias converges slowly because the bowl is about 56 times flatter in that direction.
+- Four mistakes found in the workshop's original markdown, listed in the notebook.
 
 ### Challenge A — PyTorch (Antonio)
 
-Notebook: [`individual_notebooks/GD_Antonio.ipynb`](individual_notebooks/GD_Antonio.ipynb)
+Section: *Group 1: Challenge A, PyTorch*, after Challenge A in the notebook.
 
 Model $\hat{y} = xw$ trained on $x = [1,2,3,4]$, $y = [2,4,6,8]$ (true weight $w = 2$) with mean squared error, starting from the same random weight (1.5410, seed 0) in every experiment.
 
@@ -126,24 +128,52 @@ Key findings:
 
 ### Challenge B — TensorFlow (John)
 
-*[Placeholder — `tf.GradientTape` results, noise and mini-batch extension, large learning-rate test.]*
+Section: *Group 1: Challenge B, TensorFlow*, after the TensorFlow extension challenge.
+
+Model $\hat{y} = xW + b$ trained on $y = 2x + 1$ with `tf.GradientTape` and `assign_sub`, starting from the same random weight and $b = 0$ in every experiment.
+
+| Experiment | Setting | Learned W | Learned b | Final MSE |
+|---|---|---|---|---|
+| Full batch, clean data | lr = 0.01, 300 epochs | 2.1034 | 0.6960 | 0.0154 |
+| Full batch, noisy data (σ = 0.5) | lr = 0.01, 300 epochs | 2.2254 | 0.3448 | 0.1417 |
+| Mini-batch (size 2, `tf.data`), noisy data | lr = 0.01, 300 epochs | 2.2155 | 0.3760 | 0.1412 |
+| Learning rate too large | lr = 0.2, 30 epochs | −8.9 × 10¹⁰ | −3.0 × 10¹⁰ | 7.3 × 10²² |
+
+Key findings:
+
+- Low loss does not mean exact parameters: after 300 epochs the clean model's loss is small, but the bias is still 0.70 instead of 1.
+- Fixed noise raises the minimum loss but does not make full-batch training bumpy. Mini-batches do: the mini-batch loss went up on more than 100 of the 300 epochs, while full-batch never did.
+- Mini-batch training makes two updates per epoch, so comparisons should count updates as well as epochs.
+- A learning rate of 0.2 diverges within 30 epochs.
 
 ### Challenge C — Keras (Eche)
 
-*[Placeholder — `model.fit()` (C1) and custom training loop (C2) results.]*
+Section: *Group 1: Challenge C, Keras*, split between C1 and C2 in the notebook.
+
+| Experiment | Setting | Weight | Bias | Final MSE |
+|---|---|---|---|---|
+| C1 `fit()`, linear model | lr = 0.01, 200 epochs | 2.0535 | 0.8427 | 4.1 × 10⁻³ |
+| C1 `fit()`, longer | lr = 0.01, 2,000 epochs | 2.0002 | 0.9993 | 8.6 × 10⁻⁸ |
+| C1 `fit()`, faster | lr = 0.05, 200 epochs | 2.0048 | 0.9860 | 3.3 × 10⁻⁵ |
+| C2 custom loop, 8 ReLU hidden units | lr = 0.01, 200 epochs | – | – | 1.2 × 10⁻³ |
+| C2 custom loop, continued | lr = 0.01, 1,000 epochs | – | – | about 4 × 10⁻¹⁰ |
+
+Key findings:
+
+- The 200-epoch run of the starter code is not enough for the bias to converge. Ten times more epochs, or a five times larger learning rate, gets it close to 1.
+- The same linear model trained through `fit()` and through a custom `GradientTape` loop gives the same weights and losses within float tolerance. `fit()` changes how the code is written, not the gradient-descent rule.
+- C2's hidden-layer weights do not individually equal 2 or 1. Only the full network reproduces $y = 2x + 1$.
 
 ### Reflection
 
-The 15 reflection questions are answered in the individual notebooks:
+All 15 reflection questions are answered in the section *Group 1: Reflection Answers*, after Section 17 of the notebook. The member who answered each question is named next to it:
 
-| Questions | Notebook |
+| Questions | Answered by |
 |---|---|
-| Q1–Q5, Q14, Q15 | `GD_sultan_.ipynb` |
-| Q6, Q9, Q10 | `GD_Antonio.ipynb` |
-| Q7, Q8, Q11 | `GD_John.ipynb` |
-| Q12, Q13 | `GD_Eche.ipynb` |
-
-*[Placeholder — link to the merged reflection section after the merge.]*
+| Q1–Q5, Q14, Q15 | Sultan |
+| Q6, Q9, Q10 | Antonio |
+| Q7, Q8, Q11 | John |
+| Q12, Q13 | Eche |
 
 ---
 
